@@ -145,3 +145,4 @@ RHEL 7.5, or Ubuntu 16.04 with the following minimum system resources:
 * 2 CPUs
 
 Follow the [Installation Guide]({{< relref "install.md" >}}) to install Chef Automate on your own resources.
+
