@@ -13,7 +13,7 @@ gh_repo = "automate"
     weight = 20
 +++
 
-The Chef Automate Event Creation App is a ServiceNow-certified app available in the [ServiceNow](https://store.servicenow.com) store. The Event Creation App integrates Chef Automate with ServiceNow by enabling you to create events and alerts corresponding to the failed Chef Infra client runs and compliance scans. These events and alerts generated in the ServiceNow platforms are due to the failures in the Chef Automate infrastructure automation updates and automated compliance checks. Thus, this app captures the failures in your automated infrastructure and improves your event tracking and resolution.
+The Chef Automate Event Creation App is a ServiceNow-certified app available in the [ServiceNow](https://store.servicenow.com) store. The Event Creation App integrates Chef Automate with ServiceNow by enabling you to create events and alerts for failed Chef Infra client runs and compliance scans. This app captures the failures in your automated infrastructure and improves your event tracking and resolution.
 
 The Event Creation App exposes the REST API endpoint for communication between Chef Automate and the ServiceNow instance. Chef Automate sends HTTPS JSON notifications to the Event Creation App in a ServiceNow instance to create and update events.
 
