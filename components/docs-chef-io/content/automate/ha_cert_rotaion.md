@@ -51,3 +51,5 @@ Have to cover the below ones?
 - For rotating the elasticsearch certificates, ./scripts/credentials set elasticsearch --auto
 
 - And to rotate all certificates in one command, ./scripts/credentials set ssl --rotate-all
+
+DNS
