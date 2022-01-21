@@ -272,6 +272,21 @@ func (t *GenerateReportTask) Run(ctx context.Context, task cereal.Task) (interfa
 		return nil, err
 	}
 
+	config := lifecycle.NewConfiguration()
+	config.Rules = []lifecycle.Rule{
+		{
+			ID:     "expire-bucket",
+			Status: "Enabled",
+			Expiration: lifecycle.Expiration{
+				Days: 1,
+			},
+		},
+	}
+
+	err = t.ObjStoreClient.SetBucketLifecycle(context.Background(), job.RequestToProcess.RequestorId, config)
+	if err != nil {
+		return nil, err
+	}
 	var reportSize int64
 	var objectName string
 	if job.RequestToProcess.ReportType == "json" {
