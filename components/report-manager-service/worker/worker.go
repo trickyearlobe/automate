@@ -249,7 +249,7 @@ func (t *GenerateReportTask) Run(ctx context.Context, task cereal.Task) (interfa
 			return nil, err
 		}
 	}
-	lifecycles, err := t.ObjStoreClient.GetBucketLifecycle(context.Background(), job.RequestToProcess.RequestorId)
+	lifecycles, err := t.ObjStoreClient.GetBucketLifecycle(ctx, job.RequestToProcess.RequestorId)
 	// fmt.Println(lifecycles)
 
 	if lifecycles == nil && err.Error() == "The lifecycle configuration does not exist" {
@@ -264,7 +264,7 @@ func (t *GenerateReportTask) Run(ctx context.Context, task cereal.Task) (interfa
 			},
 		}
 
-		err = t.ObjStoreClient.SetBucketLifecycle(context.Background(), job.RequestToProcess.RequestorId, config)
+		err = t.ObjStoreClient.SetBucketLifecycle(ctx, job.RequestToProcess.RequestorId, config)
 		if err != nil {
 			return nil, err
 		}
