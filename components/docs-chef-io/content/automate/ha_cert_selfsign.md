@@ -41,7 +41,7 @@ Install an *openssl* utility.
 
 ```bash
 
-#!/bin/bash
+# !/bin/bash
 
 echo extendedKeyUsage = clientAuth, serverAuth > server_cert_ext.cnf
 
