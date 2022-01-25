@@ -13,41 +13,93 @@ gh_repo = "automate"
     weight = 250
 +++
 
-## Certificate Rotation
+## What are Certificates ?
 
-Certificate rotation means the replacement of existing certificates with new ones when any certificate expires or based on your organization policy. A new CA authority is substituted for the old requiring a replacement of root certificate for the cluster. 
+A security certificate is a small data file used as an Internet security technique through which the identity, authenticity and reliability of a website or Web application is established.
 
-The certificate rotation is also required when key for a node, client, or CA is compromised. Then, you need to modify the contents of a certificate, for example, to add another DNS name or the IP address of a load balancer through which a node can be reached.  In this case, you  would need to rotate only the node certificates.
+Certificates should be rotated periodically, to ensure optimal security.
 
-## Rotating the Certificates
+## What are Self Signed Certificate ?
 
-You can generate the required certificates or you can use the existing certificates of your organization. Follow these steps to rotate your certificates:
+A self signed certificate is a digital certificate that’s not signed by a publicly trusted certificate authority (CA). They are created, issued, and signed by the company or developer who is responsible for the website or software being signed. The private key used in such certificate is not validated by a third party and is generally used in low-risk internal networks or in the software development phase. In addition, unlike CA-issued certificates, self-signed certificates cannot be revoked.
+
+## Certificate Creation
+
+You can create a self-signed key and certificate pair with OpenSSL utility, a command line tool for creating and managing OpenSSL certificates, keys, and other files.
+
+### Prerequisites
+
+Install an *openssl* utility.
+
+### Creating a Certificate
 
 1. Navigate to your workspace folder. For example, `cd /hab/a2_deploy_workspace`.
-2. Type the command, `./scripts/credentials set ssl --help `.
 
-3. Type the command, `./scripts/credentials set ssl` with the appropriate options to generate list of skeleton files. ??
+1. Type the command, `./scripts/credentials set ssl --rotate-all`. This command creates a skeleton of certificates.
 
-4. Copy your *x.509 SSL certs* into the appropriate files in `certs/` folder.
+1. Copy the below *bash script* to a new file:
 
-    - Place your root certificate into `ca_root.pem file`.
+```bash
 
-    - Place your intermediate CA into the `pem` file.
+#!/bin/bash 
 
-5. If your organization issues certificate from an intermediate CA, then place the respective certificate after the server certificate as per order listed. For example, in `certs/pg_ssl_public.pem`, paste it as them as listed:
+echo extendedKeyUsage = clientAuth, serverAuth > server_cert_ext.cnf 
 
-   - Server Certificate
-   - Intermediate CA Certificate 1
-   - Intermediate CA Certificate n
+echo extendedKeyUsage = clientAuth, serverAuth > client_cert_ext.cnf 
 
-6. Type the command, `./scripts/credentials set ssl` (with the appropriate options) and press **Enter**. This command deploys the nodes. You can check the options using --help command.
+openssl genrsa -out ca_root.key 2048 
 
-Have to cover the below ones?
+openssl req -x509 -new -key ca_root.key -sha256 -out ca_root.pem -subj '/C=US/ST=Washington/L=Seattle/O=Chef Software Inc/CN=chefrootca' 
 
-- For rotating the postgresql certificates, ./scripts/credentials set postgresql --auto
+openssl genrsa -out admin-pkcs12.key 2048 
 
-- For rotating the elasticsearch certificates, ./scripts/credentials set elasticsearch --auto
+openssl pkcs8 -v1 "PBE-SHA1-3DES" -in "admin-pkcs12.key" -topk8 -out "es_admin_ssl_private.key" -nocrypt 
 
-- And to rotate all certificates in one command, ./scripts/credentials set ssl --rotate-all
+openssl req -new -key es_admin_ssl_private.key -out admin.csr -subj '/C=US/ST=Washington/L=Seattle/O=Chef Software Inc/CN=chefadmin' 
 
-DNS
+openssl x509 -req -in admin.csr -CA ca_root.pem -CAkey ca_root.key -CAcreateserial -out es_admin_ssl_public.pem -sha256 -extfile server_cert_ext.cnf 
+
+openssl genrsa -out ssl-pkcs12.key 2048 
+
+openssl pkcs8 -v1 "PBE-SHA1-3DES" -in "ssl-pkcs12.key" -topk8 -out  es_ssl_private.key -nocrypt 
+
+openssl req -new -key es_ssl_private.key -out ssl.csr -subj '/C=US/ST=Washington/L=Seattle/O=Chef Software Inc/CN=chefnode' 
+
+openssl x509 -req -in ssl.csr -CA ca_root.pem -CAkey ca_root.key -CAcreateserial -out es_ssl_public.pem -sha256 -extfile client_cert_ext.cnf 
+
+cp ca_root.pem /hab/a2_deploy_workspace/certs/ca_root.pem 
+
+cp es_admin_ssl_public.pem /hab/a2_deploy_workspace/certs/es_admin_ssl_public.pem 
+
+cp es_admin_ssl_private.key /hab/a2_deploy_workspace/certs/es_admin_ssl_private.key 
+
+cp es_ssl_public.pem /hab/a2_deploy_workspace/certs/es_ssl_public.pem 
+
+cp es_ssl_private.key /hab/a2_deploy_workspace/certs/es_ssl_private.key 
+
+cp es_admin_ssl_private.key /hab/a2_deploy_workspace/certs/kibana_ssl_private.key 
+
+cp es_admin_ssl_public.pem /hab/a2_deploy_workspace/certs/kibana_ssl_public.pem 
+
+cp es_ssl_private.key /hab/a2_deploy_workspace/certs/pg_ssl_private.key 
+
+cp es_ssl_public.pem /hab/a2_deploy_workspace/certs/pg_ssl_public.pem 
+```
+
+1. Navigate to your bastion host.
+
+1. Execute the new file that has the copied bash script. The script generates the certificates at `/hab/a2_deploy_worspace/certs` directory. For example, `bash cert.sh`, where *cert.sh is the name of the newly created bash script file.  
+
+1. Again, navigate to your workspace folder. For example, `cd /hab/a2_deploy_workspace`.
+
+1. Execute following commands in the same order as listed to apply the generated certificates:
+
+- ./scripts/credentials set ssl --es-ssl 
+- ./scripts/credentials set ssl --pg-ssl 
+- ./scripts/credentials set ssl --kibana-ssl  
+
+Once the certificates are applied successfully, the following confirmation message appears as shown in the screen:
+
+{{< figure src="/images/automate/ha_self_sign_certificate.png" alt="Certification Creation using openssl utility">}}
+
+1. Navigate to the Chef Automate and Chef Server instances and check the Chef Service health status. If the service is down or critical, then  wait for three to four minutes for the instances to be up. 
