@@ -13,6 +13,12 @@ gh_repo = "automate"
     weight = 250
 +++
 
+## What are Certificates?
+
+A security certificate is a small data file used as an Internet security technique through which the identity, authenticity and reliability of a website or Web application is established.
+
+Certificates should be rotated periodically, to ensure optimal security.
+
 ## Certificate Rotation
 
 Certificate rotation means the replacement of existing certificates with new ones when any certificate expires or based on your organization policy. A new CA authority is substituted for the old requiring a replacement of root certificate for the cluster. 
@@ -21,9 +27,9 @@ The certificate rotation is also required when key for a node, client, or CA is 
 
 ## Rotating the Certificates
 
-You can generate the required certificates on your own or you can use the existing certificates of your organization. Ensure all the below commands must be executed from the `cd /hab/a2_deploy_workspace` path.
+You can generate the required certificates on your own or you can use the existing certificates of your organization. Ensure you execute all the below commands from the `cd /hab/a2_deploy_workspace` path.
 
-Follow these steps to rotate your certificates that are used in CheF Automate HighA vailability (HA):
+Follow these steps to rotate your certificates that are to be used in CheF Automate High Availability (HA):
 
 1. Navigate to your workspace folder. For example, `cd /hab/a2_deploy_workspace`.
 1. Type the command, `./scripts/credentials set ssl --rotate all ` and press **Enter**. This command rotates all the certificates of your organization.
