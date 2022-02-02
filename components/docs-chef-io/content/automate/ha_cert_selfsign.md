@@ -1,5 +1,5 @@
 +++
-title = "Chef Automate Certificate Rotation Self Sign"
+title = "Self Sign Certificates"
 
 draft = false
 
@@ -7,19 +7,19 @@ gh_repo = "automate"
 
 [menu]
   [menu.automate]
-    title = "Chef Automate Certificate Rotation Self Sign"
+    title = "Self Sign Certificates"
     parent = "automate/install"
-    identifier = "automate/install/ha_cert_selfsign.md Chef Automate Certificate Rotation Self Sign"
-    weight = 250
+    identifier = "automate/install/ha_cert_selfsign.md Self Sign Certificates"
+    weight = 330
 +++
 
-## What are Certificates ?
+## What are Certificates?
 
 A security certificate is a small data file used as an Internet security technique through which the identity, authenticity and reliability of a website or Web application is established.
 
 Certificates should be rotated periodically, to ensure optimal security.
 
-## What are Self Signed Certificate ?
+## What are Self Signed Certificates?
 
 A self signed certificate is a digital certificate that’s not signed by a publicly trusted certificate authority (CA). They are created, issued, and signed by the company or developer who is responsible for the website or software being signed. The private key used in such certificate is not validated by a third party and is generally used in low-risk internal networks or in the software development phase. In addition, unlike CA-issued certificates, self-signed certificates cannot be revoked.
 

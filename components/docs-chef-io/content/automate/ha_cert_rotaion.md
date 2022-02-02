@@ -1,5 +1,5 @@
 +++
-title = "Chef Automate Certificate Rotation"
+title = "Certificate Rotation"
 
 draft = false
 
@@ -7,10 +7,10 @@ gh_repo = "automate"
 
 [menu]
   [menu.automate]
-    title = "Chef Automate Certificate Rotation"
+    title = "Certificate Rotation"
     parent = "automate/install"
-    identifier = "automate/install/ha_cert_rotaion.md Chef Automate Certificate Rotation"
-    weight = 250
+    identifier = "automate/install/ha_cert_rotaion.md Certificate Rotation"
+    weight = 340
 +++
 
 ## What are Certificates?
@@ -19,13 +19,13 @@ A security certificate is a small data file used as an Internet security techniq
 
 Certificates should be rotated periodically, to ensure optimal security.
 
-## Certificate Rotation
+## How is Certificate Rotation Helpful?
 
 Certificate rotation means the replacement of existing certificates with new ones when any certificate expires or based on your organization policy. A new CA authority is substituted for the old requiring a replacement of root certificate for the cluster.
 
 The certificate rotation is also required when key for a node, client, or CA is compromised. Then, you need to modify the contents of a certificate, for example, to add another DNS name or the IP address of a load balancer through which a node can be reached.  In this case, you  would need to rotate only the node certificates.
 
-## Rotating the Certificates
+## How to Rotate the Certificates
 
 You can generate the required certificates on your own or you can use the existing certificates of your organization. Ensure you execute all the below commands from the `cd /hab/a2_deploy_workspace` path.
 
